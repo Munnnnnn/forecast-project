@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elements in Motion: Your Forecast Headquarters</title>
+
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://r4.wallpaperflare.com/wallpaper/482/672/992/road-landscape-wallpaper-21a55374e11dbeeb4c294e2cc7ad70dd.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative; /* Position relative for absolute positioning */
+        }
+
+        /* Cloud animation keyframes */
+        @keyframes cloud-move {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Pseudo-elements for clouds */
+        body::after,
+        body::before,
+        body::before {
+            content: "";
+            position: absolute;
+            top: 20%; /* Adjust vertical position as needed */
+            left: 0;
+            width: 300px; /* Adjust width of the cloud */
+            height: 100px; /* Adjust height of the cloud */
+            background: white; /* Cloud color */
+            border-radius: 50px; /* Rounded shape */
+            animation: cloud-move 30s linear infinite;
+            opacity: 0.8; /* Adjust opacity for more realistic cloud effect */
+            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8); /* Optional: Add shadow for depth */
+        }
+
+        body::after {
+            animation-duration: 30s; /* Adjust animation duration for slower cloud */
+            width: 200px; /* Adjust width of the cloud */
+            height: 80px; /* Adjust height of the cloud */
+            top: 40%; /* Adjust vertical position as needed */
+        }
+
+        body::before {
+            animation-duration: 20s; /* Adjust animation duration for medium cloud */
+            width: 250px; /* Adjust width of the cloud */
+            height: 120px; /* Adjust height of the cloud */
+            top: 10%; /* Adjust vertical position as needed */
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 600px; /* Adjust width as needed */
+            margin: auto; /* Center container horizontally */
+        }
+
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            width: 250px;
+            font-size: 1rem;
+            color: #333;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.5s;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        button:hover:before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .weather-details, .location-map {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            width: calc(50% - 20px); /* Adjust width as needed */
+        }
+
+        .weather-details {
+            text-align: left;
+            margin-right: 20px;
+        }
+
+        #city {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        #temp {
+            font-size: 3rem;
+        }
+
+        #description, #wind, #humidity {
+            font-size: 1.2rem;
+        }
+
+        svg {
+            fill: #fff;
+            transition: fill 0.3s;
+        }
+
+        input[type="text"]:focus + svg, button:hover svg {
+            fill: #2980b9;
+        }
+
+        .location-map iframe {
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column; /* Stack elements vertically on smaller screens */
+            }
+        }
+
+
+    </style>
+</head>
+<div class="container">
+    <form action="/forecast" method="post">
+        <h4 id="locationHead">Input your location 
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-label="Location icon">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 3.86 5 11 7 11s7-7.14 7-11c0-3.87-3.13-7-7-7zm0 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+        </h4>
+        <input type="text" name="latitude" placeholder="latitude" required aria-label="Latitude">
+        <input type="text" name="longitude" placeholder="longitude" required aria-label="Longitude">   
+        <button type="submit" aria-label="Submit Location">Submit</button>
+    </form>
+
+    <% if (name && latitude && longitude) { %>
+    <div class="main-content">
+        <div class="weather-details">
+            <div id="city"><%= name %></div>
+            <div id="temp"><%= temp %>°C
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
+                    <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
+                    <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
+                  </svg>
+            </div>
+            <div id="description"><%= weather %></div>
+            <div id="wind">Wind: <%= wind %> km/h 
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wind" viewBox="0 0 16 16">
+                    <path d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5m-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2M0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5"/>
+                  </svg>
+                
+            </div>
+            <div id="humidity">Humidity: <%= humidity %>%
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-droplet" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
+                    <path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
+                  </svg>
+                
+            </div>
+        </div>
+        <div class="location-map">
+            <iframe src="https://www.google.com/maps?q=<%= latitude %>,<%= longitude %>&hl=es;z=14&output=embed" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+    <% } %>
+</div>
+</body>
+</html>
